@@ -46,7 +46,7 @@ export default class dexcom {
       .then(function (data) {
         return data;
       })
-      .catch((e) => console.error(e));
+      .catch((e) => console.error(e)); 
       return accountId.replace(/['"]+/g, '')
   }
 
