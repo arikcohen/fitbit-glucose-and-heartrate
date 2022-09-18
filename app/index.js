@@ -100,6 +100,8 @@ let dataToSend = {
   heart: 0,
   steps: userActivity.get().steps,
 };
+
+
 dismiss.onclick = function (evt) {
   console.log("DISMISS");
   popup.style.display = "none";
@@ -184,8 +186,7 @@ function update() {
     activity_timeElement.text = timeElement.text;
 
     dismissHighFor = data.settings.dismissHighFor;
-    dismissLowFor = data.settings.dismissLowFor;
-    weather.text = ""; // data.weather.temp;
+    dismissLowFor = data.settings.dismissLowFor;    
     degreeIcon.style.display = "none";
 
     // colors
@@ -197,98 +198,6 @@ function update() {
     let currentBgFromBloodSugars = getFistBgNonpredictiveBG(
       data.bloodSugars.bgs
     );
-
-    // Layout options
-    if (
-      currentBgFromBloodSugars[data.settings.layoutOne] &&
-      data.settings.layoutOne != "iob"
-    ) {
-      iob.text = currentBgFromBloodSugars[data.settings.layoutOne];
-      syringe.style.display = "none";
-      iob.x = 10;
-    } else {
-      iob.text = commas(userActivity.get().steps);
-      syringe.style.display = "inline";
-      iob.x = 35;
-      if (currentBgFromBloodSugars.iob && currentBgFromBloodSugars.iob != 0) {
-        iob.text = currentBgFromBloodSugars.iob + "";        
-        syringe.style.display = "inline";        
-      } else {
-        iob.text = "";
-        syringe.style.display = "none";      
-      }
-    }
-
-    if (
-      currentBgFromBloodSugars[data.settings.layoutTwo] &&
-      data.settings.layoutTwo != "cob"
-    ) {
-      cob.text = currentBgFromBloodSugars[data.settings.layoutTwo];
-      hamburger.style.display = "none";
-      cob.x = 10;
-    } else {
-      cob.text = userActivity.get().heartRate;
-      hamburger.style.display = "inline";
-      cob.x = 35;
-      if (currentBgFromBloodSugars.cob && currentBgFromBloodSugars.cob != 0) {
-        cob.text = currentBgFromBloodSugars.cob + "";        
-        hamburger.style.display = "inline";        
-      } else {
-        cob.text = "";        
-        hamburger.style.display = "none";        
-      }
-    }
-
-    if (
-      currentBgFromBloodSugars[data.settings.layoutThree] &&
-      data.settings.layoutThree != "steps"
-    ) {
-      steps.text = currentBgFromBloodSugars[data.settings.layoutThree];
-      stepIcon.style.display = "none";
-      steps.x = 10;
-    } else {
-      steps.text = commas(userActivity.get().steps);
-      stepIcon.style.display = "inline";
-      steps.x = 35;
-    }
-
-    if (
-      currentBgFromBloodSugars[data.settings.layoutFour] &&
-      data.settings.layoutFour != "heart"
-    ) {
-      heart.text = currentBgFromBloodSugars[data.settings.layoutFour];
-      heartIcon.style.display = "none";
-      heart.x = 10;
-    } else {
-      heart.text = userActivity.get().heartRate;
-      heartIcon.style.display = "inline";
-      heart.x = 35;
-    }
-
-    sgv.text = currentBgFromBloodSugars.currentbg;    
-    activity_sgv.text = sgv.text;
-    if (currentBgFromBloodSugars.rawbg) {
-      rawbg.text = currentBgFromBloodSugars.rawbg + " ";
-    } else {
-      rawbg.text = "";
-    }
-
-    if (currentBgFromBloodSugars.tempbasal) {
-      tempBasal.text = currentBgFromBloodSugars.tempbasal;
-    } else {
-      tempBasal.text = "";
-    }
-
-    if (currentBgFromBloodSugars.predictedbg) {
-      predictedBg.text = currentBgFromBloodSugars.predictedbg;
-    } else {
-      predictedBg.text = "";
-    }
-
-    timeOfLastSgv.text = dateTime.getTimeSenseLastSGV(
-      currentBgFromBloodSugars.datetime
-    )[0];
-    
 
     dateElement.text = dateTime.getDate(
       data.settings.dateFormat,
