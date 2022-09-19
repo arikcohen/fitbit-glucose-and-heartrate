@@ -76,8 +76,8 @@ let activity_distance = document.getElementById("activity_distance");
 let activityStartTime = null;
 let activityStartDistance = null;
 
-let bgColor = document.getElementById("bgColor");
-let activityViewwBgColor = document.getElementById("activityViewwBgColor");
+// let bgColor = document.getElementById("bgColor");
+// let activityViewwBgColor = document.getElementById("activityViewwBgColor");
 
 let batteryPercent = document.getElementById("batteryPercent");
 let popup = document.getElementById("popup");
@@ -192,6 +192,10 @@ function update() {
   activity_heart.text = heart.text;
   batteryLevel.width = batteryLevels.get().level;
   batteryPercent.text = "" + batteryLevels.get().percent + "%";
+  batteryLevel.width = batteryLevels.get().level;
+  batteryLevel.style.fill = batteryLevels.get().color;
+  batteryPercent.text = "" + batteryLevels.get().percent + "%";
+    
 
   //update activity data (if present)
   if (activityStartTime) {
@@ -209,27 +213,24 @@ function update() {
     activityDistance.text = (distanceInMeters/1609.344).toFixed(2).toString() + " mi";
     
   }
-
   
+
+
 
   if (data) {
     console.warn("GOT DATA");
-    batteryLevel.width = batteryLevels.get().level;
-    batteryLevel.style.fill = batteryLevels.get().color;
-    batteryPercent.text = "" + batteryLevels.get().percent + "%";
     
     timeElement.text = dateTime.getTime(data.settings.timeFormat);
     activity_timeElement.text = timeElement.text;
 
     dismissHighFor = data.settings.dismissHighFor;
-    dismissLowFor = data.settings.dismissLowFor;    
-    degreeIcon.style.display = "none";
+    dismissLowFor = data.settings.dismissLowFor;        
 
     // colors
-    bgColor.fill = data.settings.bgColor;    
-    activityViewwBgColor = data.settings.bgColor;    
+    //bgColor.fill = data.settings.bgColor;    
+    //activityViewwBgColor = data.settings.bgColor;    
+    //setTextColor(data.settings.textColor);
 
-    setTextColor(data.settings.textColor);
     // bloodsugars
     let currentBgFromBloodSugars = getFistBgNonpredictiveBG(
       data.bloodSugars.bgs
