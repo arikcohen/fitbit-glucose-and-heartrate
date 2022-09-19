@@ -350,10 +350,9 @@ export default class standardize {
 			return returnBloodsugars;
 			//}
 		}
-		logs.add('Line 63: here reurning error')
+		
 		let currentTime = new Date();
-		console.error("currentTime---------------------------")
-		console.error(currentTime)
+		
 		return {
 			bgs: [{
 					sgv: '120',

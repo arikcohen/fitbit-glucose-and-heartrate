@@ -17,8 +17,9 @@
  */
 
 import document from "document";
+
 import { inbox } from "file-transfer";
-import fs from "fs";
+import * as fs from "fs";
 import { vibration } from "haptics";
 import DateTime from "../modules/app/dateTime.js";
 import BatteryLevels from "../modules/app/batteryLevels.js";
@@ -27,6 +28,9 @@ import UserActivity from "../modules/app/userActivity.js";
 import Alerts from "../modules/app/alerts.js";
 import Errors from "../modules/app/errors.js";
 import Transfer from "../modules/app/transfer.js";
+
+
+
 // import { preferences, save, load } from "../modules/app/sharedPreferences";
 import { memory } from "system";
 
@@ -69,6 +73,8 @@ let activity_heartIcon = document.getElementById("activity_heartIcon");
 let activity_sgv = document.getElementById("activity_sgv");
 let activity_duration = document.getElementById("activity_heart");
 let activity_distance = document.getElementById("activity_distance");
+let activityStartTime = null;
+let activityStartDistance = null;
 
 let bgColor = document.getElementById("bgColor");
 let activityViewwBgColor = document.getElementById("activityViewwBgColor");
@@ -84,6 +90,9 @@ let degreeIcon = document.getElementById("degreeIcon");
 let activityStart = document.getElementById("activityStart");
 let activityView = document.getElementById("activityView");
 let activityExit = document.getElementById("activityExit");
+
+let activityDuration = document.getElementById("activity_duration");
+let activityDistance = document.getElementById("activity_distance");
 
 let syringe = document.getElementById("syringe");
 let hamburger = document.getElementById("hamburger");
@@ -136,16 +145,15 @@ cob.text = "---";
 activity_timeElement.text = "***";
 dateElement.text = "";
 timeOfLastSgv.text = "";
-weather.text = "--";
 steps.text = "--";
 
 heart.text = "--";
 activity_heart.text = "--";
 
 batteryPercent.text = "%";
-errorText.text = "";
+errorText.text = "Configure Data Source";
 update();
-setInterval(update, 10000);
+setInterval(update, 1000);
 
 timeElement.text = dateTime.getTime();
 activity_timeElement.text = dateTime.getTime();
@@ -158,6 +166,7 @@ inbox.onnewfile = () => {
     // If there is a file, move it from staging into the application folder
     fileName = inbox.nextFile();
     if (fileName) {
+      console.log("reading data file:" + fileName);
       data = fs.readFileSync(fileName, "cbor");
       update();
     }
@@ -177,11 +186,38 @@ function update() {
     steps: userActivity.get().steps,
   };
 
+  // Update device data
+  steps.text = commas(userActivity.get().steps);
+  heart.text = userActivity.get().heartRate;
+  activity_heart.text = heart.text;
+  batteryLevel.width = batteryLevels.get().level;
+  batteryPercent.text = "" + batteryLevels.get().percent + "%";
+
+  //update activity data (if present)
+  if (activityStartTime) {
+    let dateObj = new Date();
+
+    let seconds = (dateObj.getTime() - activityStartTime)/1000;
+    if (seconds < 3600)
+      activityDuration.text = new Date(seconds * 1000).toISOString().substring(14, 19);
+    else
+      activityDuration.text = new Date(seconds * 1000).toISOString().substring(11, 16);
+
+
+    let distanceInMeters = userActivity.get().distance - activityStartDistance;
+
+    activityDistance.text = (distanceInMeters/1609.344).toFixed(2).toString() + " mi";
+    
+  }
+
+  
+
   if (data) {
     console.warn("GOT DATA");
     batteryLevel.width = batteryLevels.get().level;
     batteryLevel.style.fill = batteryLevels.get().color;
     batteryPercent.text = "" + batteryLevels.get().percent + "%";
+    
     timeElement.text = dateTime.getTime(data.settings.timeFormat);
     activity_timeElement.text = timeElement.text;
 
@@ -239,8 +275,9 @@ function update() {
     // add Plus
     if (deltaText > 0) {
       deltaText = "+" + deltaText;
+      delta.text = deltaText + " " + data.settings.glucoseUnits;
     }
-    delta.text = deltaText + " " + data.settings.glucoseUnits;
+    
     
     arrows.href =
       "../resources/img/arrows/" + currentBgFromBloodSugars.direction + ".png";
@@ -248,16 +285,11 @@ function update() {
     
   } else {
     console.warn("NO DATA");
-    steps.text = commas(userActivity.get().steps);
-    heart.text = userActivity.get().heartRate;
-    activity_heart.text = heart.text;
-    batteryLevel.width = batteryLevels.get().level;
-    batteryPercent.text = "" + batteryLevels.get().percent + "%";
 
     timeElement.text = dateTime.getTime();
     
     activity_timeElement.text = timeElement.text;
-    //console.log(activity_timeElement.text);
+    
     dateElement.text = dateTime.getDate();
   }
 }
@@ -289,10 +321,9 @@ function setTextColor(color) {
     "delta",
     "timeOfLastSgv",
     "time",
-    "high",
-    "low",    
-    "predictedBg",
-    "tempBasal",
+    "activity_time",
+    "activity_heart",
+    "activity_sgv"
   ];
   domElemets.forEach((ele) => {
     document.getElementById(ele).style.fill = color;
@@ -300,7 +331,10 @@ function setTextColor(color) {
 }
 
 activityStart.onclick = (e) => {
-  console.log("activityView Activated!");
+  console.log("activityView Activated!");  
+  let dateObj = new Date();
+  activityStartTime = dateObj.getTime();
+  activityStartDistance = userActivity.get().distance;
   vibration.start("bump");
   activityView.style.display = "inline";
   main.style.display = "none";
@@ -309,6 +343,7 @@ activityStart.onclick = (e) => {
 
 activityExit.onclick = (e) => {
   console.log("activityView exited!");
+  activityStartTime = null;
   vibration.start("bump");
   activityView.style.display = "none";
   main.style.display = "inline";
@@ -327,6 +362,7 @@ timeElement.onclick = (e) => {
 setTimeout(function () {
   transfer.send(dataToSend);
 }, 1500);
+
 setInterval(function () {
   transfer.send(dataToSend);
 }, 180000);

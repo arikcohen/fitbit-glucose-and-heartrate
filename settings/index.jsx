@@ -6,21 +6,21 @@ function mySettings(props) {
     <Page>
       <Text>
         <TextImageRow
-          label="Glance"
-          sublabel="https://github.com/Rytiggy/Glance"
+          label="Glucose and Heartrate Clock"
+          sublabel="https://github.com/arikcohen/fitbit-glucose-and-heartrate"
           icon="https://image.ibb.co/gbWF2H/twerp_bowtie_64.png"
         />
         <Text>&nbsp;</Text>
         <Text>&nbsp;</Text>
         <Text>
-          Glance is a solution for use with Fitbit devices to view your blood
+          Glucose and Heartrate Clock is a solution for use with Fitbit devices to view your blood
           glucose levels along with a variety of other health stats on the watch
-          face. You can see your stats at a glance!
+          face. 
         </Text>
         <Text>&nbsp;</Text>
         <Text>
-          <Link source="https://github.com/Rytiggy/Glance/wiki/How-to-set-up-Glance#2-settings">
-            Click here to learn how to set up Glance!
+          <Link source="https://github.com/arikcohen/fitbit-glucose-and-heartrate/wiki/How-to-set-up-Glance#2-settings">
+            Click here to learn how to set up your glucose monitoring!
           </Link>
         </Text>
       </Text>
@@ -36,6 +36,7 @@ function mySettings(props) {
           label={`Data Source`}
           settingsKey="dataSource"
           options={[
+            { name: "None", value: "none" },
             { name: "Dexcom", value: "dexcom" },
             { name: "Nightscout", value: "nightscout" },
             { name: "xDrip+", value: "xdrip" },

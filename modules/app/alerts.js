@@ -43,9 +43,7 @@ export default class alerts {
     alertArrows.style.display = "inline";
     console.log("app - Alerts - Check()");
     sgv.style.fill = "#75bd78";
-    largeGraphsSgv.style.fill = "#75bd78";
-    errorLine.style.fill = "#75bd78";
-    // largeGraphErrorLine.style.fill ="#75bd78";
+        
     popupLeadText.text = "Check Blood Sugar!";
 
     let timeSenseLastSGV = dateTime.getTimeSenseLastSGV(bg.datetime)[1];

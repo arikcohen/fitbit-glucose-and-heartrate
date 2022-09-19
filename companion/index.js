@@ -17,7 +17,7 @@ import Settings from "../modules/companion/settings.js";
 import Transfer from "../modules/companion/transfer.js";
 import Fetch from "../modules/companion/fetch.js";
 import Standardize from "../modules/companion/standardize.js";
-// import Weather from "../modules/companion/weather.js";
+
 import Logs from "../modules/companion/logs.js";
 import Sizeof from "../modules/companion/sizeof.js";
 import Dexcom from "../modules/companion/dexcom.js";
@@ -37,8 +37,10 @@ const sizeof = new Sizeof();
 let dataReceivedFromWatch = null;
 
 async function sendData() {
+  
+  console.log("Preparing to send data...");
   // Get settings
-  const store = await settings.get(dataReceivedFromWatch);
+  const store = await settings.get();
 
   // Get SGV data
   let bloodsugars = null;
@@ -76,14 +78,11 @@ async function sendData() {
       extraData = await fetch.get(store.extraDataUrl);
     }
   }
-
-  // Get weather data
-  // let weather = await fetch.get(await weatherURL.get(store.tempType));
+  
   Promise.all([bloodsugars, extraData]).then(function (values) {
     let dataToSend = {
       bloodSugars: standardize.bloodsugars(values[0], values[1], store),
       settings: standardize.settings(store),
-      // weather: values[2].query.results.channel.item.condition,
     };
     logs.add(
       "Line 59: companion - sendData - DataToSend size: " +
@@ -94,6 +93,8 @@ async function sendData() {
       "Line 60: companion - sendData - DataToSend: " +
         JSON.stringify(dataToSend)
     );
+
+    console.log("Data sent");
     transfer.send(dataToSend);
   });
 }
