@@ -51,6 +51,8 @@ export default class dexcom {
   }
 
   async getSessionId(dexcomUsername, dexcomPassword, subDomain) {
+
+    
     let accountId = await this.login(dexcomUsername, dexcomPassword, subDomain);
     console.log(accountId);
 

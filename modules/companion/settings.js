@@ -16,7 +16,7 @@ import Logs from "./logs.js";
 const logs = new Logs();
 
 export default class settings {
-  get(dataReceivedFromWatch) {
+  get() {
     let queryParms = "?count=47";
     logs.add("companion - settings - get()");
     let dataSource = null;
@@ -28,10 +28,10 @@ export default class settings {
         "dataSource",
         JSON.stringify({
           selected: [0],
-          values: [{ name: "Dexcom", value: "dexcom" }],
+          values: [{ name: "None", value: "none" }],
         })
       );
-      dataSource = "dexcom";
+      dataSource = "none";
     }
 
     let url = "http://127.0.0.1:17580/sgv.json" + queryParms;
@@ -87,11 +87,7 @@ export default class settings {
         "." +
         nightscoutSiteHost +
         "/api/v2/properties";
-    } else if (dataSource === "xdrip") {
-      // xDrip+
-      if (dataReceivedFromWatch && dataReceivedFromWatch != null) {
-        queryParms = `?count=47&steps=${dataReceivedFromWatch.steps}&heart=${dataReceivedFromWatch.heart}`;
-      }
+    } else if (dataSource === "xdrip") {          
       // Include data even if not from the current sensor (e.g. if there's no sensor)
       queryParms += "&all_data=true";
       url = "http://127.0.0.1:17580/sgv.json" + queryParms;
@@ -218,7 +214,6 @@ export default class settings {
       settingsStorage.setItem("highAlerts", true);
     }
 
-    console.log(settingsStorage.getItem("lowAlerts"));
     let lowAlerts = null;
     if (settingsStorage.getItem("lowAlerts")) {
       lowAlerts = JSON.parse(settingsStorage.getItem("lowAlerts"));
@@ -288,54 +283,9 @@ export default class settings {
       );
     }
 
-    let bgColor = null;
-    let bgColorTwo = "#000000";
+    let bgColor = null;    
     if (settingsStorage.getItem("bgColor")) {
-      bgColor = validateHexCode(JSON.parse(settingsStorage.getItem("bgColor")));
-      if (bgColor === "#FFFFFF") {
-        bgColor = "#" + Math.random().toString(16).slice(2, 8);
-        bgColorTwo = "#" + Math.random().toString(16).slice(2, 8);
-        let saveColor = null;
-        if (settingsStorage.getItem("saveColor")) {
-          saveColor = JSON.parse(settingsStorage.getItem("saveColor"));
-        }
-        if (!saveColor) {
-          saveColor = false;
-        }
-        if (!saveColor) {
-          settingsStorage.setItem(
-            "hexColor",
-            JSON.stringify({ name: validateHexCode(bgColor, false) })
-          );
-          settingsStorage.setItem(
-            "hexColorTwo",
-            JSON.stringify({ name: validateHexCode(bgColorTwo, false) })
-          );
-        } else {
-          bgColor = validateHexCode(
-            JSON.parse(settingsStorage.getItem("hexColor")).name.replace(
-              / /g,
-              ""
-            ),
-            false
-          );
-          bgColorTwo = validateHexCode(
-            JSON.parse(settingsStorage.getItem("hexColorTwo")).name.replace(
-              / /g,
-              ""
-            ),
-            false
-          );
-          settingsStorage.setItem(
-            "hexColor",
-            JSON.stringify({ name: bgColor })
-          );
-          settingsStorage.setItem(
-            "hexColorTwo",
-            JSON.stringify({ name: bgColorTwo })
-          );
-        }
-      }
+      bgColor = validateHexCode(JSON.parse(settingsStorage.getItem("bgColor")));      
     } else if (!bgColor) {
       bgColor = "#4D86FF";
     }
@@ -352,14 +302,6 @@ export default class settings {
       settingsStorage.setItem("textColor", JSON.stringify({ name: textColor }));
     }
 
-    let largeGraph = null;
-    if (settingsStorage.getItem("largeGraph")) {
-      largeGraph = JSON.parse(settingsStorage.getItem("largeGraph"));
-    } else if (!largeGraph) {
-      largeGraph = true;
-      settingsStorage.setItem("largeGraph", true);
-    }
-
     let treatments = null;
     if (settingsStorage.getItem("treatments")) {
       treatments = JSON.parse(settingsStorage.getItem("treatments"));
@@ -367,99 +309,7 @@ export default class settings {
       treatments = false;
     }
 
-    let layoutOne = null;
-    if (
-      settingsStorage.getItem("layoutOne") &&
-      JSON.parse(settingsStorage.getItem("layoutOne")).values
-    ) {
-      layoutOne = JSON.parse(settingsStorage.getItem("layoutOne")).values[0]
-        .value;
-    } else if (!layoutOne) {
-      layoutOne = "iob";
-      settingsStorage.setItem(
-        "layoutOne",
-        JSON.stringify({
-          selected: [0],
-          values: [{ name: "Insulin on board (default)", value: "iob" }],
-        })
-      );
-    }
-
-    let layoutTwo = null;
-    if (
-      settingsStorage.getItem("layoutTwo") &&
-      JSON.parse(settingsStorage.getItem("layoutTwo")).values
-    ) {
-      layoutTwo = JSON.parse(settingsStorage.getItem("layoutTwo")).values[0]
-        .value;
-    } else if (!layoutTwo) {
-      layoutTwo = "cob";
-      settingsStorage.setItem(
-        "layoutTwo",
-        JSON.stringify({
-          selected: [0],
-          values: [{ name: "Carbs on board (default)", value: "cob" }],
-        })
-      );
-    }
-
-    let layoutThree = null;
-    if (
-      settingsStorage.getItem("layoutThree") &&
-      JSON.parse(settingsStorage.getItem("layoutThree")).values
-    ) {
-      layoutThree = JSON.parse(settingsStorage.getItem("layoutThree")).values[0]
-        .value;
-    } else if (!layoutThree) {
-      layoutThree = "step";
-      settingsStorage.setItem(
-        "layoutThree",
-        JSON.stringify({
-          selected: [0],
-          values: [{ name: "steps (default)", value: "steps" }],
-        })
-      );
-    }
-
-    let layoutFour = null;
-    if (
-      settingsStorage.getItem("layoutFour") &&
-      JSON.parse(settingsStorage.getItem("layoutFour")).values
-    ) {
-      layoutFour = JSON.parse(settingsStorage.getItem("layoutFour")).values[0]
-        .value;
-    } else if (!layoutFour) {
-      layoutFour = "heart";
-      settingsStorage.setItem(
-        "layoutFour",
-        JSON.stringify({
-          selected: [0],
-          values: [{ name: "heart (default)", value: "heart" }],
-        })
-      );
-    }
-
-    let enableSmallGraphPrediction = null;
-    if (settingsStorage.getItem("enableSmallGraphPrediction")) {
-      enableSmallGraphPrediction = JSON.parse(
-        settingsStorage.getItem("enableSmallGraphPrediction")
-      );
-    } else if (!enableSmallGraphPrediction) {
-      enableSmallGraphPrediction = true;
-      settingsStorage.setItem(
-        "enableSmallGraphPrediction",
-        enableSmallGraphPrediction
-      );
-    }
-
-    let loopstatus = null;
-    if (settingsStorage.getItem("loopstatus")) {
-      loopstatus = JSON.parse(settingsStorage.getItem("loopstatus"));
-    } else if (!loopstatus) {
-      loopstatus = true;
-      settingsStorage.setItem("loopstatus", loopstatus);
-    }
-
+  
     let enableDOW = null;
     if (settingsStorage.getItem("enableDOW")) {
       enableDOW = JSON.parse(settingsStorage.getItem("enableDOW"));
@@ -546,22 +396,14 @@ export default class settings {
       dateFormat,
       tempType,
       bgColor,
-      bgColorTwo,
       textColor,
       dismissHighFor,
-      dismissLowFor,
-      largeGraph,
+      dismissLowFor,      
       treatments,
       highAlerts,
       lowAlerts,
       rapidRise,
-      rapidFall,
-      layoutOne,
-      layoutTwo,
-      layoutThree,
-      layoutFour,
-      enableSmallGraphPrediction,
-      loopstatus,
+      rapidFall,            
       enableDOW,
       dexcomUsername,
       dexcomPassword,
@@ -570,6 +412,7 @@ export default class settings {
       staleData,
       staleDataAlertAfter,
     };
+    
     return settings;
   }
   setToggle(key, value) {
