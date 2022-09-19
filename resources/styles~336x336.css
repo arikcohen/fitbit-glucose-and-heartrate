@@ -110,7 +110,7 @@
 }
 
 #arrows {
- x: 83%;
+ x: 83%-18;
  y: 35%;
  width: 45;
  height: 45;
@@ -145,17 +145,6 @@
  height: 16;
 }
 
-#graph {
-  x: 49%-24; 
-  y: 60%+3; 
-  width: 175; 
-  height: 100;
-}
-
-.graph-point {
-  fill:#b0b1b2;
-}
-
 .gval {
   fill:#b0b1b2;
 }
@@ -178,15 +167,6 @@
   height: 100;
   fill: black;
 }
-#goToRunView {
-  y: 25%;
-  x: 20%;
-  width: 145;
-  height: 90;
-  fill: red;
-}
-
-
 
 #syringe {
  x: 3%;
@@ -198,13 +178,18 @@
 }
 
 #activityStart {
-  x:50%;
-  y:70%;  
+  x:72%;
+  y:65%;  
+  fill: #0b001f;
 }
 
-#actityStart #image {
-  href: "img/steps.png";
-  fill: green;
+
+
+#activityStart #image {
+  href: "img/activity.png";
+  height: 48;
+  width: 48;
+  fill: white;
 }
 
 
@@ -253,6 +238,7 @@
 }
 
 /* activity view */
+
 #activity_time {
   x: 50%;
   y: 20%;   
@@ -263,7 +249,7 @@
 }
 
 #activity_heart {
-  x: 22%;  
+  x: 24%;  
   y: 46%;
   fill: lightgray;  
   text-anchor: middle;
@@ -271,7 +257,7 @@
 }
 
 #activity_heartIcon {
-  x: 22%-12;
+  x: 24%-12;
   y: 50%;
   height:24;
   width:24;
@@ -280,13 +266,13 @@
 }
 
 #activity_sgv {
-  x: 78%;
+  x: 76%;
   y: 46%;  
   text-anchor: middle;  
 }
 
 #activity_arrows {
-  x: 78%-12;
+  x: 76%-12;
   y: 50%;
   height:24;
   width:24;
@@ -301,7 +287,7 @@
 }
 
 #activity_duration {
-  x: 46%;
+  x: 45%;
   y: 65%;
   width: 150;
   fill: white;  
@@ -315,9 +301,15 @@
 }
 
 #activity_distance {
-  x: 46%;
+  x: 45%;
   y: 75%;
   width: 150;
   fill: white;  
+}
+
+#activityExit {
+  height: 100%;  
+  width: 100%;
+  
 }
 
