@@ -60,11 +60,8 @@
   
     <svg id="activityView" display="none" width="100%" height="100%">        
         <rect id="activity_bgColor" width="100%" height="100%" fill="#0b001f"/>
-        <text class="h2" id="activity_time" />          
-        <text class="h1" id="activity_heart" />        
-        <text  class="h1" id="activity_sgv" />
-
-        <image class="stat-image" href="img/heart_solid.png" id="activity_heartIcon" />
+        
+        <image href="img/heart_outline_large.png" id="activity_heartIcon" />
         <image href="img/arrows/None.png" id="activity_arrows"/>
         
         <image class="stat-image" href="img/stopwatch.png" id="activity_durationIcon" />
@@ -76,6 +73,11 @@
         <use id="activityExit" href="#text-button"  opacity="0">
             <set href="#text" attributeName="text-buffer" to="" />
         </use>        
+
+        <text class="h2" id="activity_time" />          
+        <text class="h1" id="activity_heart" />        
+        <text  class="h1" id="activity_sgv" />
+
     </svg>   
 
 </svg>

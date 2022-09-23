@@ -174,33 +174,31 @@
 
 #activity_time {
   x: 50%;
-  y: 20%;   
+  y: 50;   
   width:50%; 
-  text-anchor: middle;
-  vertical-align: middle;
+  text-anchor: middle;  
   fill: gray;
 }
 
 #activity_heart {
-  x: 24%;  
-  y: 46%;
-  fill: lightgray;  
+  x: 28%;  
+  y: 48%;
+  fill: cornflowerblue;  
   text-anchor: middle;
   vertical-align: middle;
 }
 
 #activity_heartIcon {
-  x: 24%-12;
-  y: 50%;
-  height:24;
-  width:24;
-  fill: red;
-  vertical-align: middle;
+  x: 28%-90;
+  y: 40%-80;
+  height:160;
+  width:180;
+  opacity: 0.3;
 }
 
 #activity_sgv {
-  x: 76%;
-  y: 46%;  
+  x: 72%;
+  y: 48%;  
   text-anchor: middle;  
 }
 
