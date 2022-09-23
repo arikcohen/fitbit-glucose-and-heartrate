@@ -25,7 +25,6 @@ import DateTime from "../modules/app/dateTime.js";
 import BatteryLevels from "../modules/app/batteryLevels.js";
 
 import UserActivity from "../modules/app/userActivity.js";
-import Alerts from "../modules/app/alerts.js";
 import Errors from "../modules/app/errors.js";
 import Transfer from "../modules/app/transfer.js";
 
@@ -38,7 +37,6 @@ const dateTime = new DateTime();
 const batteryLevels = new BatteryLevels();
 
 const userActivity = new UserActivity();
-const alerts = new Alerts();
 const errors = new Errors();
 const transfer = new Transfer();
 
@@ -102,7 +100,7 @@ let dismissHighFor = 120;
 let dismissLowFor = 15;
 
 let data = null;
-let DISABLE_ALERTS = false;
+
 
 // Data to send back to phone
 let dataToSend = {
@@ -111,28 +109,6 @@ let dataToSend = {
 };
 
 
-dismiss.onclick = function (evt) {
-  console.log("DISMISS");
-  popup.style.display = "none";
-  popupTitle.style.display = "none";
-  vibration.stop();
-  DISABLE_ALERTS = true;
-  let currentBgFromBloodSugars = getFistBgNonpredictiveBG(data.bloodSugars.bgs);
-
-  if (currentBgFromBloodSugars.sgv >= parseInt(data.settings.highThreshold)) {
-    console.log("HIGH " + dismissHighFor);
-    setTimeout(disableAlertsFalse, dismissHighFor * 1000 * 60);
-  } else {
-    // 15 mins
-    console.log("LOW " + dismissLowFor);
-
-    setTimeout(disableAlertsFalse, dismissLowFor * 1000 * 60);
-  }
-};
-
-function disableAlertsFalse() {
-  DISABLE_ALERTS = false;
-}
 
 sgv.text = "---";
 activity_sgv.text = "---";
@@ -151,7 +127,7 @@ heart.text = "--";
 activity_heart.text = "--";
 
 batteryPercent.text = "%";
-errorText.text = "Configure Data Source";
+errorText.text = "No Data";
 update();
 setInterval(update, 1000);
 
@@ -174,8 +150,8 @@ inbox.onnewfile = () => {
 };
 
 function update() {
-  console.log("app - update()");
-  console.warn("JS memory: " + memory.js.used + "/" + memory.js.total);
+  //console.log("app - update()");
+  //console.warn("JS memory: " + memory.js.used + "/" + memory.js.total);
   let heartrate = userActivity.get().heartRate;
   if (!heartrate) {
     heartrate = 0;
@@ -190,18 +166,20 @@ function update() {
   steps.text = commas(userActivity.get().steps);
   heart.text = userActivity.get().heartRate;
   activity_heart.text = heart.text;
-  batteryLevel.width = batteryLevels.get().level;
+
+  batteryLevel.width = batteryLevels.get().level;    
   batteryPercent.text = "" + batteryLevels.get().percent + "%";
   batteryLevel.width = batteryLevels.get().level;
   batteryLevel.style.fill = batteryLevels.get().color;
   batteryPercent.text = "" + batteryLevels.get().percent + "%";
-    
+
+
 
   //update activity data (if present)
   if (activityStartTime) {
     let dateObj = new Date();
 
-    let seconds = (dateObj.getTime() - activityStartTime)/1000;
+    let seconds = (dateObj.getTime() - activityStartTime) / 1000;
     if (seconds < 3600)
       activityDuration.text = new Date(seconds * 1000).toISOString().substring(14, 19);
     else
@@ -210,29 +188,28 @@ function update() {
 
     let distanceInMeters = userActivity.get().distance - activityStartDistance;
 
-    activityDistance.text = (distanceInMeters/1609.344).toFixed(2).toString() + " mi";
-    
+    activityDistance.text = (distanceInMeters / 1609.344).toFixed(2).toString() + " mi";
+
   }
-  
+
 
 
 
   if (data) {
-    console.warn("GOT DATA");
-    
+    //console.warn("GOT DATA");
+
+    errorText.text = "";
+
     timeElement.text = dateTime.getTime(data.settings.timeFormat);
     activity_timeElement.text = timeElement.text;
 
     dismissHighFor = data.settings.dismissHighFor;
-    dismissLowFor = data.settings.dismissLowFor;        
+    dismissLowFor = data.settings.dismissLowFor;
 
-    // colors
-    //bgColor.fill = data.settings.bgColor;    
-    //activityViewwBgColor = data.settings.bgColor;    
-    //setTextColor(data.settings.textColor);
-
+    
     // bloodsugars
-    let currentBgFromBloodSugars = getFistBgNonpredictiveBG(
+
+    let currentBgFromBloodSugars = getFirstBgNonpredictiveBG(
       data.bloodSugars.bgs
     );
 
@@ -241,58 +218,55 @@ function update() {
       data.settings.enableDOW
     );
 
-    let timeSenseLastSGV = dateTime.getTimeSenseLastSGV(
-      currentBgFromBloodSugars.datetime
-    )[1];
-    // if DISABLE_ALERTS is true check if user is in range
-    if (DISABLE_ALERTS && data.settings.resetAlertDismissal) {
-      if (
-        parseInt(timeSenseLastSGV, 10) < data.settings.staleDataAlertAfter &&
-        currentBgFromBloodSugars.direction != "DoubleDown" &&
-        currentBgFromBloodSugars.direction != "DoubleUp" &&
-        currentBgFromBloodSugars.loopstatus != "Warning"
-      ) {
-        // Dont reset alerts for LOS, DoubleUp, doubleDown, Warning
-        if (
-          currentBgFromBloodSugars.sgv > parseInt(data.settings.lowThreshold) &&
-          currentBgFromBloodSugars.sgv < parseInt(data.settings.highThreshold)
-        ) {
-          // if the BG is between the threshold
-          console.error("here", DISABLE_ALERTS, parseInt(timeSenseLastSGV, 10));
-          disableAlertsFalse();
-        }
-      }
-    }
+    // check to see if we have a good datapoint 
+    
+    if (currentBgFromBloodSugars.datetime != null) 
+    {      
+      let timeSinceLastSGV = dateTime.getTimeSinceLastSGV(
+        currentBgFromBloodSugars.datetime
+      )[0];
 
-    alerts.check(
-      currentBgFromBloodSugars,
-      data.settings,
-      DISABLE_ALERTS,
-      timeSenseLastSGV
-    );
+      
+      let deltaText = currentBgFromBloodSugars.bgdelta;
+      // add Plus
+      if (deltaText > 0) {
+        deltaText = "+" + deltaText;
+      }  
 
-    errors.check(timeSenseLastSGV, currentBgFromBloodSugars.currentbg);
-    let deltaText = currentBgFromBloodSugars.bgdelta;
-    // add Plus
-    if (deltaText > 0) {
-      deltaText = "+" + deltaText;
       delta.text = deltaText + " " + data.settings.glucoseUnits;
+
+      iob.text = currentBgFromBloodSugars.iob;
+      cob.text = currentBgFromBloodSugars.cob;
+      sgv.text = currentBgFromBloodSugars.currentbg;
+      activity_sgv.text = sgv.text;    
+      timeOfLastSgv.text = timeSinceLastSGV;
+
+      arrows.href =
+        "../resources/img/arrows/" + currentBgFromBloodSugars.direction + ".png";
+      
     }
-    
-    
-    arrows.href =
-      "../resources/img/arrows/" + currentBgFromBloodSugars.direction + ".png";
-    activity_arrows.href = arrows.href;
-    
+    else {
+      delta.text = "";
+      iob.text = "";
+      cob.text = "";
+      sgv.text = "---";
+      arrows.href = "../resources/img/arrows/none.png";
+      errorText.text = "Invalid Data";
+    }
+
   } else {
     console.warn("NO DATA");
 
     timeElement.text = dateTime.getTime();
-    
     activity_timeElement.text = timeElement.text;
-    
+
     dateElement.text = dateTime.getDate();
+    errorText.text = "Configure Data Source";
   }
+  
+  activity_arrows.href = arrows.href;
+  activity_sgv.text = sgv.text;
+
 }
 
 function commas(value) {
@@ -303,7 +277,7 @@ function commas(value) {
  * @param {Array} bgs
  * @returns {Array}
  */
-function getFistBgNonpredictiveBG(bgs) {
+function getFirstBgNonpredictiveBG(bgs) {
   return bgs.filter((bg) => {
     if (bg.bgdelta || bg.bgdelta === 0) {
       return true;
@@ -332,7 +306,7 @@ function setTextColor(color) {
 }
 
 activityStart.onclick = (e) => {
-  console.log("activityView Activated!");  
+  console.log("activityView Activated!");
   let dateObj = new Date();
   activityStartTime = dateObj.getTime();
   activityStartDistance = userActivity.get().distance;

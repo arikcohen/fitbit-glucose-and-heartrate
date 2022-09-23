@@ -12,6 +12,7 @@
  */
 
 
+import dateTime from "../app/dateTime.js";
 import Logs from "./logs.js";
 import Sizeof from "./sizeof.js";
 
@@ -74,6 +75,8 @@ export default class standardize {
 			} else if (settings.dataSource === 'custom') {
 				bgs = data.bgs;
 			} else if (settings.dataSource === 'dexcom') {
+				let currentTime = new Date();
+
 				let bgsTemplate = {
 					bgs: [{
 							sgv: '120',
@@ -81,14 +84,14 @@ export default class standardize {
 							iob: 0,
 							cob: 0,
 							datetime: null,
-							direction: 'flat',
+							direction: 'flat',							
 							currentbg: (data.error ? ('E' + data.error.status) : 'DSE'),
 							rawbg: '',
 							tempbasal: '',
 							loopstatus: '',
 						},
 						{
-							sgv: '120'
+							sgv: '120'							
 						},
 						{
 							sgv: '120'

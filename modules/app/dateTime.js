@@ -13,7 +13,7 @@
 
 export default class dateTime {
   getDate(dateFormat, enableDOW) {
-    console.log("app - dateTime - getDate()");
+    //console.log("app - dateTime - getDate()");
     let dateObj = new Date();
     let month = ("0" + (dateObj.getMonth() + 1)).slice(-2);
     let date = ("0" + dateObj.getDate()).slice(-2);
@@ -43,7 +43,7 @@ export default class dateTime {
   }
 
   getTime(timeFormat) {
-    console.log("app - dateTime - getTime()");
+    //console.log("app - dateTime - getTime()");
     let timeNow = new Date();
     let hh = timeNow.getHours();
     let mm = timeNow.getMinutes();
@@ -62,11 +62,20 @@ export default class dateTime {
     return hh + ":" + mm;
   }
 
-  getTimeSenseLastSGV(sgvDateTime) {
-    console.log("app - dateTime - getTimeSenseLastSGV()");
+  getTimeSinceLastSGV(sgvDateTime) {
+    //console.log("app - dateTime - getTimeSenseLastSGV()");
+    
+
+    if (sgvDateTime == null) {
+      return ["", ""];
+    }
+
     let currentTime = new Date();
     let lastSGVTime = new Date(sgvDateTime);
-    let secondsDiff = (currentTime.getTime() - lastSGVTime.getTime()) / 1000;
+    let secondsDiff = ((currentTime.getTime() - lastSGVTime.getTime()) / 1000);
+    
+    //console.log("entry: " + sgvDateTime + " date:" + lastSGVTime.toString() + " diff:"  + secondsDiff); 
+    
     let timeSense = "";
     let timeSenseNumber = "";
     if (secondsDiff > 86400) {

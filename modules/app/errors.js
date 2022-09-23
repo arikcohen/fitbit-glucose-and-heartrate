@@ -22,13 +22,13 @@ let largeGraphsSgv = document.getElementById("largeGraphsSgv");
 
 export default class errors { 
   check(timeSenseLastSGV) {
-    console.log('app - errors - check()')   
+    //console.log('app - errors - check()')   
     // if the bloodsugar is stale 
     if (parseInt(timeSenseLastSGV, 10) >= 15) {         
       sgv.style.fill = 'gray';
-      
+      return "Stale Data";
     } else {      
-      
+      return "";
     }
   }
 };

@@ -89,19 +89,18 @@
 }
 
 #delta {
- x: 85%;
- y: 11%;
+ x: 84%;
+ y: 12%;
 }
 
-#sgv {
- text-anchor:"end";
- x: 95%;
+#sgv { 
+ x: 84%;
  y: 28%;
 }
 
 #timeOfLastSgv{
- x: 94%;
- y: 35%;
+ x: 84%;
+ y: 37%;
 }
 
 #time {
@@ -110,8 +109,8 @@
 }
 
 #arrows {
- x: 83%-18;
- y: 35%;
+ x: 85%;
+ y: 16%;
  width: 45;
  height: 45;
  fill: white;
@@ -149,25 +148,6 @@
   fill:#b0b1b2;
 }
 
-#dismiss {
-  y: 59%;
-  x: 5%;
-  width: 100;
-  height: 115;
-}
-
-#dismiss #text {
-  fill:white;
-}
-
-#goToTreatment {
-  y: 66%;
-  x: 2%;
-  width: 145;
-  height: 100;
-  fill: black;
-}
-
 #syringe {
  x: 3%;
  y: 53%;   
@@ -183,58 +163,11 @@
   fill: #0b001f;
 }
 
-
-
 #activityStart #image {
   href: "img/activity.png";
   height: 48;
   width: 48;
   fill: white;
-}
-
-
-#popup-title {
-  x: 50%;
-  y: 30%
-}
-
-#carbsTreatment {
-  x: 50%;
-  y: 27%;
-  width: 50%;
-}
-
-#insulinTreatment {
-  x: 50%;
-  y: 50%;
-  width: 50%;
-}
-
-#graphPoints {
- fill: red; 
-}
-
-.item { height: 90;  width:50; }
-.item text { font-size: 80; fill: white; x: 10;  }
-
-.itemTenth { height: 90; width:30; }
-.itemTenth text { font-size: 80; fill: white; x: 0;  }
-
-
-#rawbg {
-  x: 75%;
-  y: 35%;
-}
-
-
-
-
-#alertArrows {
- x: 70%;
- y: 15%;
- width: 45;
- height: 45;
- fill: white;
 }
 
 /* activity view */

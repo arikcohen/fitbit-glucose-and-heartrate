@@ -1,29 +1,34 @@
 <svg id="clock">
-    <rect id="bgColor" width="100%" height="100%" fill="#0b001f"/>
+
     <svg id="main">
-        
+        <rect id="bgColor" width="100%" height="100%" fill="#0b001f"/>
         <rect id="battery-level" />
         <image class="battery-image" href="img/battery.png" fill="white" />
-        <text text-anchor="start" class="text text-gray" id="batteryPercent">99</text>        
-        <image href="img/degree.png" id="degreeIcon" />
+        <text text-anchor="start" class="text text-gray" id="batteryPercent">99</text>                
         <text text-anchor="start" class="text text-gray" id="date" />
-        <text text-anchor="end" class="text text-gray" id="delta" />
-        <line stroke-width="4" id="errorLine" display="none" />
+        <text text-anchor="end" class="text text-gray" id="delta" />        
         <text text-anchor="end" class="text text-gray" id="timeOfLastSgv" />
 
         <image href="img/arrows/None.png" id="arrows" />
-        <text font-size="75" text-anchor="start" class="h1" id="time" pointer-events="visible"/>
-        <text font-size="60" text-anchor="end" class="h1" id="sgv" pointer-events="visible" />
+
+        <text font-size="70" text-anchor="start" class="h1" id="time" pointer-events="visible"/>
+        <text font-size="55" text-anchor="end" class="h1" id="sgv" pointer-events="visible" />
+
+        <image class="stat-image" href="img/syringe.png" fill="white" id="syringe" />      
+        <text class="text" id="iob" />
+        
+        <image class="stat-image" href="img/hamburger.png" fill="white" id="hamburger" />
+        <text class="text" id="cob" />
+              
+        
         <image class="stat-image" href="img/steps.png" fill="white" id="stepIcon" />
         <text text-anchor="start" class="text" id="steps" />
+        
         <image class="stat-image" href="img/heart_solid.png" fill="red" id="heartIcon" />
         <text text-anchor="start" class="text" id="heart" />
+
         <text class="text" id="error" text-anchor="end" fill="cyan">--</text>
-        <text class="text" id="cob" />
-        <image class="stat-image" href="img/hamburger.png" fill="white" id="hamburger" />
-        <text class="text" id="iob" />
-        <image class="stat-image" href="img/syringe.png" fill="white" id="syringe" />      
-        
+
         <use id="activityStart" href="#icon-button" class="icon-button large-button"/>
                 
 
@@ -54,6 +59,7 @@
     </svg>         
   
     <svg id="activityView" display="none" width="100%" height="100%">        
+        <rect id="activity_bgColor" width="100%" height="100%" fill="#0b001f"/>
         <text class="h2" id="activity_time" />          
         <text class="h1" id="activity_heart" />        
         <text  class="h1" id="activity_sgv" />

@@ -4,7 +4,7 @@
     "@fitbit/sdk-cli": "^1.7.3"
   },
   "fitbit": {
-    "appUUID": "7b5d9822-7e8e-41f9-a2a7-e823548c001c",
+    "appUUID": "daf79a0d-18aa-4abe-a13b-552d3819ecef",
     "appType": "clockface",
     "appDisplayName": "Glucose and Heart Rate",
     "iconFile": "resources/icon.png",
