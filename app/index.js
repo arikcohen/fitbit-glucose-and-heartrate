@@ -40,6 +40,10 @@ const userActivity = new UserActivity();
 const errors = new Errors();
 const transfer = new Transfer();
 
+const forceUpdateFrequency =  1000 * 60 * 5;
+let lastUpdated = null;
+
+
 let main = document.getElementById("main");
 let sgv = document.getElementById("sgv");
 let rawbg = document.getElementById("rawbg");
@@ -75,6 +79,7 @@ let activityStartDistance = null;
 
 let weatherIcon = document.getElementById("weatherIcon");
 let weather = document.getElementById("weather");
+let weatherLocation = document.getElementById("weatherLocation");
 
 // let bgColor = document.getElementById("bgColor");
 // let activityViewwBgColor = document.getElementById("activityViewwBgColor");
@@ -102,7 +107,6 @@ let dismissHighFor = 120;
 let dismissLowFor = 15;
 
 let data = null;
-let dataFile = "";
 
 
 // Data to send back to phone
@@ -145,17 +149,15 @@ inbox.onnewfile = () => {
     // If there is a file, move it from staging into the application folder
     fileName = inbox.nextFile();
     if (fileName) {
-      console.log("reading data file:" + fileName);
-      dataFile = fileName;
-      data = fs.readFileSync(fileName, "cbor");
-      switch (dataFile) {
+      console.log("reading data file:" + fileName);      
+      data = fs.readFileSync(fileName, "cbor"); 
+      switch (fileName) {                
         case "baseData.json":
-          updateFromCompanion();
-          break;
+          lastUpdated = Date.now();
         case "weather.cbor":
           updateWeather();
           break;
-      }
+      }    
     }
   } while (fileName);
 };
@@ -196,17 +198,18 @@ function update() {
     else
       activityDuration.text = new Date(seconds * 1000).toISOString().substring(11, 16);
 
-
     let distanceInMeters = userActivity.get().distance - activityStartDistance;
 
     activityDistance.text = (distanceInMeters / 1609.344).toFixed(2).toString() + " mi";
 
   }
-
+  updateDataFromCompanion();
 }
 
-function updateFromCompanion() {
-  if (data) {
+function updateDataFromCompanion() {
+  
+  if (fs.existsSync('baseData.json')) {
+    data = fs.readFileSync('baseData.json', "cbor");
     //console.warn("GOT DATA");
     errorText.text = "";
 
@@ -280,6 +283,12 @@ function updateFromCompanion() {
   
   activity_arrows.href = arrows.href;
   activity_sgv.text = sgv.text;
+
+  if (Date.now() - lastUpdated > forceUpdateFrequency) {
+    console.log ("would have requested an update");
+    forceActivate();
+    lastUpdated = Date.now()-1000*60;
+  }
 }
 
 
@@ -289,10 +298,11 @@ function updateWeather() {
 
     weather.text = data.temperature + "°";    
     weatherIcon.href = "img/weather/" + data.condition + ".png";
+    weatherLocation.text = data.location;
     //imgWeather.style.display = block;
   }
   else {
-    txtTemp.text = "";
+    weather.text = "";
     weatherIcon.href = "img/weather/unknown.png";
     //imgWeather.style.display = none;
   }
@@ -353,12 +363,15 @@ activityExit.onclick = (e) => {
   main.style.display = "inline";
 };
 
-timeElement.onclick = (e) => {
+timeElement.onclick = (e) => { forceActivate(); };
+sgv.onclick = (e) => { forceActivate(); };
+
+
+function forceActivate() {
   console.log("FORCE Activated!");
   transfer.send(dataToSend);
   vibration.start("bump");
   arrows.href = "../resources/img/arrows/loading.png";
   activity_arrows.href = "../resources/img/arrows/loading.png";
   alertArrows.href = "../resources/img/arrows/loading.png";
-};
-
+}

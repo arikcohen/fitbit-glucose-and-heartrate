@@ -24,6 +24,7 @@
         
         <image class="stat-image" href="img/weather/blank.png" fill="white" id="weatherIcon" />
         <text text-anchor="start" class="h3" id="weather" />
+        <text text-anchor="start" class="text" id="weatherLocation"/>
 
         
         <image class="stat-image" href="img/steps.png" fill="white" id="stepIcon" />

@@ -130,7 +130,8 @@ settingsStorage.onchange = function (evt) {
 };
 
 const MINUTE = 1000 * 60;
-me.wakeInterval = 6 * MINUTE;
+me.wakeInterval = 5 * MINUTE + 1;
+me.monitorSignificantLocationChanges = true;
 
 if (me.launchReasons.wokenUp) {
   // The companion started due to a periodic timer
