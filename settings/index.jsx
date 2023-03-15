@@ -1,5 +1,5 @@
-import { settings } from "settings";
-import { XMLHttpRequest } from "xmlhttprequest";
+//import { settings } from "settings";
+//import { XMLHttpRequest } from "xmlhttprequest";
 
 function mySettings(props) {
   return (

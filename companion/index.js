@@ -22,6 +22,8 @@ import Logs from "../modules/companion/logs.js";
 import Sizeof from "../modules/companion/sizeof.js";
 import Dexcom from "../modules/companion/dexcom.js";
 
+import * as simpleWeather from "./simple/weather";
+
 import * as messaging from "messaging";
 import { me } from "companion";
 
@@ -96,6 +98,7 @@ async function sendData() {
 
     console.log("Data sent");
     transfer.send(dataToSend);
+    simpleWeather.initialize();
   });
 }
 
@@ -127,15 +130,17 @@ settingsStorage.onchange = function (evt) {
 };
 
 const MINUTE = 1000 * 60;
-me.wakeInterval = 5 * MINUTE;
+me.wakeInterval = 6 * MINUTE;
 
 if (me.launchReasons.wokenUp) {
   // The companion started due to a periodic timer
-  console.error("Started due to wake interval!");
+  console.error("Started due to wake interval!");    
   sendData();
 } else {
   // Close the companion and wait to be awoken
   me.yield();
 }
-// wait 1 seconds before getting things started
-setTimeout(sendData, 1000);
+
+// wait 1/2 seconds before getting things started
+setTimeout(sendData, 500);
+

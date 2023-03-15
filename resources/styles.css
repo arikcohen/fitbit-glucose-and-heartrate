@@ -6,6 +6,7 @@
   height: 100%;
   fill: white;
   text-length: 64;
+  pointer-events: none;
 }
 
 .xs-text {
@@ -19,7 +20,7 @@
 }
 
 .h3 {
-  font-size: 45;
+  font-size: 36;
   font-family:  Seville-Medium;
   font-weight: regular;
   width: 100%;
@@ -74,92 +75,113 @@
 
 #error {
  x: 95%+3;
- y: 59%+2;
+ y: 63%;
 }
 
+#weatherIcon {
+  x: 58%;
+  y: 10%;  
+  height:36;
+  width:36;
+}
+
+#weather {
+ x: 58%+40;
+ y: 10%+30;
+}
+
+#syringe {
+  x: 3%;
+  y: 53%;   
+  display: none;
+}
 
 #iob {
  x: 9%;
  y: 58%;
+ display: none;
 }
 
+#hamburger {
+  x: 3%;
+  y: 62%;   
+  display: none;
+ }
+ 
 #cob {
  x: 9%;
  y: 67%;
+ display: none;
 }
+
+#stepIcon {
+  x: 3%;
+  y: 58%; 
+}
+
+#steps {
+ x: 9%;
+ y: 63%;
+}
+
+#heartIcon {
+  x: 3%;
+  y: 67%; 
+}
+
+ #heart {
+ x: 9%;
+ y: 72%;
+}
+
 
 #delta {
  x: 84%;
- y: 12%;
+ y: 58%;
 }
 
 #sgv { 
  x: 84%;
- y: 28%;
+ y: 77%;
+ font-size: 70;
 }
+
+#arrows {
+  x: 85%;
+  y: 63%;
+  width: 45;
+  height: 45;
+  fill: white;
+ }
+ 
 
 #timeOfLastSgv{
  x: 84%;
- y: 37%;
+ y: 85%;
 }
 
 #time {
  x: 3%;
  y: 47%;
+ font-size:"70";
 }
 
-#arrows {
- x: 85%;
- y: 16%;
- width: 45;
- height: 45;
- fill: white;
-}
 
-#weather {
- x: 36%;
- y: 8%+3;
- opacity: 0;
-}
 
-#steps {
- x: 9%;
- y: 76%;
-}
-#heart {
- x: 9%;
- y: 85%;
-}
 
-#stepIcon {
- x: 3%;
- y: 71%; 
-}
-#heartIcon {
- x: 3%;
- y: 80%; 
-}
+
 .stat-image{
  width: 16;
  height: 16;
+ pointer-events: none;
 }
 
 .gval {
   fill:#b0b1b2;
 }
-
-#syringe {
- x: 3%;
- y: 53%;   
-}
-#hamburger {
- x: 3%;
- y: 62%;   
-}
-
 #activityStart {
-  x:72%;
-  y:65%;  
+  x:10%;
+  y:72%;  
   fill: #0b001f;
 }
 
@@ -240,7 +262,6 @@
 
 #activityExit {
   height: 100%;  
-  width: 100%;
-  
+  width: 100%;  
 }
 

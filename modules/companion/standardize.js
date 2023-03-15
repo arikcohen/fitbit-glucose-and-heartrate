@@ -39,9 +39,8 @@ export default class standardize {
 		let predictedBg = '';
 		let loopStatus = '';
 		let upbat = '';
-		let sage = ''
-		logs.add(`BGS: ${bgs} !data.error: ${!data.error} data: ${data} bgs !== 'undefined': ${bgs !== 'undefined'}`);
-		if (bgs && !data.error && data && bgs !== 'undefined') {
+		let sage = ''		
+		if (bgs && data && !data.error && bgs !== 'undefined') {
 			if (settings.dataSource === 'nightscout') {
 				bgs = data.bgs;
 				// SPIKE WORK AROUND 
@@ -85,7 +84,7 @@ export default class standardize {
 							cob: 0,
 							datetime: null,
 							direction: 'flat',							
-							currentbg: (data.error ? ('E' + data.error.status) : 'DSE'),
+							currentbg: 'ERR',
 							rawbg: '',
 							tempbasal: '',
 							loopstatus: '',
@@ -361,10 +360,9 @@ export default class standardize {
 					sgv: '120',
 					bgdelta: 0,
 					iob: 0,
-					cob: 0,
-					datetime: currentTime.getTime(),
-					direction: 'warning',
-					currentbg: (data.error ? ('E' + data.error.status) : 'DSE'),
+					cob: 0,					
+					sgv:"ERR",
+					direction: 'warning',					
 					rawbg: '',
 					tempbasal: '',
 					loopstatus: '',

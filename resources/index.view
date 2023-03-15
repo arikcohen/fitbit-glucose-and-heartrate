@@ -11,15 +11,20 @@
 
         <image href="img/arrows/None.png" id="arrows" />
 
-        <text font-size="70" text-anchor="start" class="h1" id="time" pointer-events="visible"/>
-        <text font-size="55" text-anchor="end" class="h1" id="sgv" pointer-events="visible" />
+        <text text-anchor="start" class="h1" id="time" pointer-events="visible"/>
+        <text text-anchor="end" class="h1" id="sgv" pointer-events="visible" />
+
+        <use id="activityStart" href="#icon-button" class="icon-button large-button"/>
 
         <image class="stat-image" href="img/syringe.png" fill="white" id="syringe" />      
         <text class="text" id="iob" />
         
         <image class="stat-image" href="img/hamburger.png" fill="white" id="hamburger" />
         <text class="text" id="cob" />
-              
+        
+        <image class="stat-image" href="img/weather/blank.png" fill="white" id="weatherIcon" />
+        <text text-anchor="start" class="h3" id="weather" />
+
         
         <image class="stat-image" href="img/steps.png" fill="white" id="stepIcon" />
         <text text-anchor="start" class="text" id="steps" />
@@ -29,7 +34,7 @@
 
         <text class="text" id="error" text-anchor="end" fill="cyan">--</text>
 
-        <use id="activityStart" href="#icon-button" class="icon-button large-button"/>
+        
                 
 
          <!-- Alert -->
@@ -70,14 +75,15 @@
         <image class="stat-image" href="img/distance.png" id="activity_distanceIcon" />
         <text class="text" id="activity_distance"/>                
 
-        <use id="activityExit" href="#text-button"  opacity="0">
-            <set href="#text" attributeName="text-buffer" to="" />
-        </use>        
+        
 
         <text class="h2" id="activity_time" />          
         <text class="h1" id="activity_heart" />        
         <text  class="h1" id="activity_sgv" />
-
+        
+        <use id="activityExit" href="#text-button"  opacity="0">
+            <set href="#text" attributeName="text-buffer" to="" />
+        </use>        
     </svg>   
 
 </svg>

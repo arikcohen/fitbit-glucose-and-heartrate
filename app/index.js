@@ -54,7 +54,6 @@ let dateElement = document.getElementById("date");
 let timeElement = document.getElementById("time");
 let activity_timeElement = document.getElementById("activity_time");
 
-let weather = document.getElementById("weather");
 let arrows = document.getElementById("arrows");
 let activity_arrows = document.getElementById("activity_arrows");
 
@@ -73,6 +72,9 @@ let activity_duration = document.getElementById("activity_heart");
 let activity_distance = document.getElementById("activity_distance");
 let activityStartTime = null;
 let activityStartDistance = null;
+
+let weatherIcon = document.getElementById("weatherIcon");
+let weather = document.getElementById("weather");
 
 // let bgColor = document.getElementById("bgColor");
 // let activityViewwBgColor = document.getElementById("activityViewwBgColor");
@@ -100,6 +102,7 @@ let dismissHighFor = 120;
 let dismissLowFor = 15;
 
 let data = null;
+let dataFile = "";
 
 
 // Data to send back to phone
@@ -143,8 +146,16 @@ inbox.onnewfile = () => {
     fileName = inbox.nextFile();
     if (fileName) {
       console.log("reading data file:" + fileName);
+      dataFile = fileName;
       data = fs.readFileSync(fileName, "cbor");
-      update();
+      switch (dataFile) {
+        case "baseData.json":
+          updateFromCompanion();
+          break;
+        case "weather.cbor":
+          updateWeather();
+          break;
+      }
     }
   } while (fileName);
 };
@@ -167,7 +178,7 @@ function update() {
   heart.text = userActivity.get().heartRate;
   activity_heart.text = heart.text;
 
-  batteryLevel.width = batteryLevels.get().level;    
+  batteryLevel.width = batteryLevels.get().level;
   batteryPercent.text = "" + batteryLevels.get().percent + "%";
   batteryLevel.width = batteryLevels.get().level;
   batteryLevel.style.fill = batteryLevels.get().color;
@@ -192,12 +203,11 @@ function update() {
 
   }
 
+}
 
-
-
+function updateFromCompanion() {
   if (data) {
     //console.warn("GOT DATA");
-
     errorText.text = "";
 
     timeElement.text = dateTime.getTime(data.settings.timeFormat);
@@ -206,7 +216,7 @@ function update() {
     dismissHighFor = data.settings.dismissHighFor;
     dismissLowFor = data.settings.dismissLowFor;
 
-    
+
     // bloodsugars
 
     let currentBgFromBloodSugars = getFirstBgNonpredictiveBG(
@@ -220,30 +230,29 @@ function update() {
 
     // check to see if we have a good datapoint 
     
-    if (currentBgFromBloodSugars.datetime != null) 
-    {      
+    if (currentBgFromBloodSugars && currentBgFromBloodSugars.datetime != null) {
       let timeSinceLastSGV = dateTime.getTimeSinceLastSGV(
         currentBgFromBloodSugars.datetime
       )[0];
 
-      
+
       let deltaText = currentBgFromBloodSugars.bgdelta;
       // add Plus
       if (deltaText > 0) {
         deltaText = "+" + deltaText;
-      }  
+      }
 
       delta.text = deltaText + " " + data.settings.glucoseUnits;
 
       iob.text = currentBgFromBloodSugars.iob;
       cob.text = currentBgFromBloodSugars.cob;
       sgv.text = currentBgFromBloodSugars.currentbg;
-      activity_sgv.text = sgv.text;    
+      activity_sgv.text = sgv.text;
       timeOfLastSgv.text = timeSinceLastSGV;
 
       arrows.href =
         "../resources/img/arrows/" + currentBgFromBloodSugars.direction + ".png";
-      
+
     }
     else {
       delta.text = "";
@@ -251,29 +260,49 @@ function update() {
       cob.text = "";
       sgv.text = "---";
       arrows.href = "../resources/img/arrows/none.png";
-      errorText.text = "Invalid Data";
+      errorText.text = "Check Configuration";
     }
 
-  } else {
-    console.warn("NO DATA");
+  }
+  else {
+
+    //console.warn("NO DATA");
 
     timeElement.text = dateTime.getTime();
     activity_timeElement.text = timeElement.text;
 
     dateElement.text = dateTime.getDate();
-    errorText.text = "Configure Data Source";
+    errorText.text = "Configure Data Source";    
+    sgv.text = "ERR";
+    arrows.href = "../resources/img/arrows/none.png";
+
   }
   
   activity_arrows.href = arrows.href;
   activity_sgv.text = sgv.text;
+}
 
+
+function updateWeather() {
+  console.log("received weather data..." + JSON.stringify(data));
+  if (data.temperature) {
+
+    weather.text = data.temperature + "°";    
+    weatherIcon.href = "img/weather/" + data.condition + ".png";
+    //imgWeather.style.display = block;
+  }
+  else {
+    txtTemp.text = "";
+    weatherIcon.href = "img/weather/unknown.png";
+    //imgWeather.style.display = none;
+  }
 }
 
 function commas(value) {
   return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 /**
- * Get Fist BG that is not a predictive BG
+ * Get First BG that is not a predictive BG
  * @param {Array} bgs
  * @returns {Array}
  */
@@ -333,13 +362,3 @@ timeElement.onclick = (e) => {
   alertArrows.href = "../resources/img/arrows/loading.png";
 };
 
-// wait 2 seconds
-setTimeout(function () {
-  transfer.send(dataToSend);
-}, 1500);
-
-setInterval(function () {
-  transfer.send(dataToSend);
-}, 180000);
-
-//<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div><div>Icons made by <a href="https://www.flaticon.com/authors/designerz-base" title="Designerz Base">Designerz Base</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div><div>Icons made by <a href="https://www.flaticon.com/authors/twitter" title="Twitter">Twitter</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
